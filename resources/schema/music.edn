@@ -1,0 +1,149 @@
+;; A simplified version of from MusicBrainz Schema
+;; Credit: https://github.com/Datomic/mbrainz-sample/blob/master/schema.edn
+
+[
+ {:db/id #db/id[:db.part/db]
+  :db/ident :country/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/value
+  :db/doc "The name of the country"
+  :db.install/_attribute :db.part/db}
+
+;; ARTIST attributes
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :artist/gid
+  :db/valueType :db.type/uuid
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/index true
+  :db/doc "The globally unique MusicBrainz ID for an artist"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :artist/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/index true
+  :db/doc "The artist's name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :artist/gender
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Enum, one of :artist.gender/male, :artist.gender/female, or :artist.gender/other."
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :artist/country
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The artist's country of origin"
+  :db.install/_attribute :db.part/db}
+
+ ;; LABEL attributes
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :label/gid
+  :db/valueType :db.type/uuid
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/index true
+  :db/doc "The globally unique MusicBrainz ID for the record label"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :label/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/index true
+  :db/doc "The name of the record label"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :label/country
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The country where the record label is located"
+  :db.install/_attribute :db.part/db}
+
+ ;; RELEASE attributes
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :release/gid
+  :db/valueType :db.type/uuid
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/index true
+  :db/doc "The globally unique MusicBrainz ID for the release"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :release/country
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The country where the recording was released"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :release/labels
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/doc "The label on which the recording was released"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :release/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/index true
+  :db/doc "The name of the release"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :release/year
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/index true
+  :db/doc "The year of the release"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :release/artists
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/doc "The set of artists contributing to the release"
+  :db.install/_attribute :db.part/db}
+
+ ;; TRACK attributes
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :track/artists
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/doc "The artists who contributed to the track"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :track/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/index true
+  :db/doc "The track name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :track/duration
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/index true
+  :db/doc "The duration of the track in msecs"
+  :db.install/_attribute :db.part/db}
+
+ ]
