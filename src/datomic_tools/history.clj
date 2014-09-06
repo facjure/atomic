@@ -1,4 +1,4 @@
-(ns datomictools.history
+(ns datomic-tools.history
   (:refer-clojure :exclude [name])
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
@@ -6,9 +6,9 @@
             [clojure.string :as str]
             [clojure.edn :as edn]
             [datomic.api :as d]
-            [datomictools.query :refer :all]
-            [datomictools.peer :refer [conn snapshot]]
-            [datomictools.utils :refer :all])
+            [datomic-tools.query :refer :all]
+            [datomic-tools.peer :refer [conn snapshot]]
+            [datomic-tools.utils :refer :all])
   (:import datomic.Util))
 
 

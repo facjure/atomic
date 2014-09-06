@@ -1,4 +1,4 @@
-(ns datomictools.schema
+(ns datomic-tools.schema
   (:refer-clojure :exclude [name])
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
@@ -7,8 +7,8 @@
             [clojure.edn :as edn]
             [datomic.api :as d]
             [clojure.tools.logging :as log]
-            [datomictools.peer :refer [conn snapshot]]
-            [datomictools.utils :refer :all])
+            [datomic-tools.peer :refer [conn snapshot]]
+            [datomic-tools.utils :refer :all])
   (:import datomic.Util))
 
 
@@ -62,7 +62,7 @@
 
         sch (conj sch {:db.install/_attribute :db.part/db})]
     (when-not (has-attribute? attr)
-      (d/transact @conn (vector sch)))))
+      (d/transact @conn (vector (sch))))))
 
 (defn create [schema]
   "Create a schema from multiple attribute definition vectors"

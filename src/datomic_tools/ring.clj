@@ -1,4 +1,4 @@
-(ns datomictools.history
+(ns datomic-tools.history
   (:refer-clojure :exclude [name])
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
@@ -6,8 +6,8 @@
             [clojure.string :as str]
             [clojure.edn :as edn]
             [datomic.api :as d]
-            [datomictools.peer :as peer]
-            [datomictools.utils :refer :all])
+            [datomic-tools.peer :as peer]
+            [datomic-tools.utils :refer :all])
   (:import datomic.Util))
 
 ;; FIXME - Experimental

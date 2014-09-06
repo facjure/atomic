@@ -1,18 +1,18 @@
-(ns datomictools.query
+(ns datomic-tools.query
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
             [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.edn :as edn]
             [datomic.api :as d]
-            [datomictools.peer :refer [conn snapshot]]
-            [datomictools.utils :refer :all])
+            [datomic-tools.peer :refer [conn snapshot]]
+            [datomic-tools.utils :refer :all])
   (:import datomic.Util))
 
 
 (defmacro defquery
   "A simple query api. Takes care of getting the current snapshot of the db, conn etc.,
-
+   TODO: a lot more todo!
    Ex:
      (query '{:find   [?title]
               :in     [$ ?artist-name]
@@ -46,8 +46,7 @@
   "Returns all entities possessing attr."
   [attr]
   (grab-entities '[:find ?e
-                   :in $ ?attr
-                   :where [?e ?attr]]
+                   :in $ ?attr]
                  @snapshot attr))
 
 (defn find-references []

@@ -1,4 +1,4 @@
-(ns datomictools.peer
+(ns datomic-tools.peer
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
             [clojure.java.io :as io]
@@ -6,14 +6,14 @@
             [clojure.edn :as edn]
             [datomic.api :as d]
             [clojure.tools.logging :as log]
-            [datomictools.utils :refer :all])
+            [datomic-tools.utils :refer :all])
   (:import datomic.Util))
 
 
 (defonce #^{:doc "Connection to Datomic"} conn (atom nil))
 
 ;;FIXME
-(defn resolve-uri [dbname]
+(defn- resolve-uri [dbname]
   "Resolve uri for various storage engines.
    TODO: Support map configs for sql and cassandra"
   (let [dbtype (or (:datomic-dbtype env) :mem)
@@ -52,7 +52,7 @@
   `(binding [snapshot# (swap! snapshot (d/db @conn))]
      ~@body))
 
-(defn cleanup! [dbname]
+(defn delete! [dbname]
   "WARNING: Deletes the database"
   (log/info "deleting the database" dbname)
   (let [uri (resolve-uri dbname)]

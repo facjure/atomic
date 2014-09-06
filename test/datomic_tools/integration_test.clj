@@ -1,4 +1,4 @@
-(ns datomictools.integration-test
+(ns datomic-tools.integration-test
   (:require [clojure.pprint :as pp]
             [clojure.java.io :as io]
             [clojure.string :as str]

@@ -1,4 +1,4 @@
-(ns datomictools.peer-test
+(ns datomic-tools.peer-test
   (:require [clojure.test :refer :all]
             [datomictools.peer :refer :all]))
 
@@ -7,8 +7,8 @@
     (let [res (setup :mem "test")]
       (is (contains? res "datomic:mem://test"))))
   (testing "playground"
-    (let [res (scratch-conn)]
+    (let [res (playground)]
       (is (contains? res "datomic:mem://"))))
   (testing "cleanup!"
-    (let [data (cleanup! :mem "test")]
+    (let [data (delete! :mem "test")]
       (is (contains? data :done)))))
