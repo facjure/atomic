@@ -31,6 +31,14 @@ Validations:
 
 Queries:
 
+```clojure
+    (query/defquery '{:find [?title ?url]
+                      :in   [$ ?title]
+                      :where [[?a :story/title ?title]
+                              [?t :story/url ?url]]
+                      :values ["Datomic"]})
+
+```
 
 ## Documentation
 
