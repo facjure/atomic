@@ -7,7 +7,7 @@
             [clojure.edn :as edn]
             [datomic.api :as d]
             [clojure.tools.logging :as log]
-            [datomic-tools.peer :refer [conn snapshot]]
+            [datomic-tools.db :refer [conn snapshot]]
             [datomic-tools.utils :refer :all])
   (:import datomic.Util))
 
@@ -29,7 +29,7 @@
 (defn has-attribute?
   "Does database have an attribute named attr-name?"
   [attr-name]
-  (-> (d/entity @snapshot attr-name)
+  (-> (d/entity (snapshot) attr-name)
       :db.install/_attribute
       boolean))
 
@@ -55,6 +55,7 @@
               (cond
                 (some #{:fulltext} (nthrest schema 4)) (conj sch {:db/fulltext true})
                 (some #{:component} (nthrest schema 4)) (conj sch {:db/isComponent true})
+                (some #{:index} (nthrest schema 4)) (conj sch {:db/index true})
                 (some #{:unique-value} (nthrest schema 4))  (conj sch {:db/unique :db.unique/value})
                 (some #{:unique-identity} (nthrest schema 4)) (conj sch {:db/unique :db.unique/identity})
                 (some #{:no-history} (nthrest schema 4)) (conj sch {:db/noHistory true}))
@@ -62,7 +63,7 @@
 
         sch (conj sch {:db.install/_attribute :db.part/db})]
     (when-not (has-attribute? attr)
-      (d/transact @conn (vector (sch))))))
+      (d/transact @conn (vector sch)))))
 
 (defn create [schema]
   "Create a schema from multiple attribute definition vectors"
@@ -70,23 +71,23 @@
 
 (defn load-edn [fname]
   "Load Edn schema from resources"
-  (doseq [txd (Util/readAll (io/reader fname))]
+  (doseq [txd (Util/readAll (io/reader (io/resource fname)))]
     (d/transact @conn txd)))
 
 (defn find-attribute [attr]
-  (d/q '[:find ?attr :in $ ?name :where [?attr :db/ident ?name]]
-       @snapshot @conn
+  (d/q '[:find ?attr :in $ ?name
+         :where [?attr :db/ident ?name]]
+       (snapshot) @conn
        attr))
 
-(defn has-schema?
+(defn has-schema? [schema-attr schema-name]
   "Does database have a schema-name installed? Uses schema-attr (an attr of transactions)
    to track which schema names are installed."
-  [schema-attr schema-name]
-  (and (has-attribute? @snapshot schema-attr)
+  (and (has-attribute? schema-attr)
        (-> (d/q '[:find ?e
                   :in $ ?sa ?sn
                   :where [?e ?sa ?sn]]
-                @snapshot schema-attr schema-name)
+                (d/db @conn) schema-attr schema-name)
            seq boolean)))
 
 (defn cardinality
