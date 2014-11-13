@@ -1,4 +1,4 @@
-(ns datomic-tools.history
+(ns datomic-tools.ring
   (:refer-clojure :exclude [name])
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
@@ -6,17 +6,15 @@
             [clojure.string :as str]
             [clojure.edn :as edn]
             [datomic.api :as d]
-            [datomic-tools.peer :as peer]
+            [datomic-tools.db :refer [conn snapshot]]
             [datomic-tools.utils :refer :all])
   (:import datomic.Util))
 
 ;; FIXME - Experimental
 (defn wrap-datomic
   "A Ring middleware that provides a request-aware database as a value for
-   the life of a request. NOTE: Entire db is loaded as a lazy value.
-   Use with Sequence abstractions only, otherwise it'll explode your memory!"
+   the life of a request."
   ([handler & [uri]]
      (fn [request]
-       (let [db peer/snapshot]
-         (handler (assoc request :datomic db))
-         (handler request)))))
+       (handler (assoc request :datomic (snapshot)))
+       (handler request))))
