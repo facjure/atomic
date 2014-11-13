@@ -29,21 +29,19 @@ For in-memory datomic, setup:
 Create a schema:
 
 ```clojure
-
-    (schema/create
-      [[:story/title "full title" :string :one :fulltext :index]
-       [:story/url "story's permamnent url" :string :one :unique-identity :index]
-       [:story/slug "a short title" :string :one]
-       [:comments "a collection of comments" :ref :many :component]
-       [:comment/body "comment 140 chars or less" :string :one]
-       [:comment/author "comment author" :ref :one]])
+(schema/create
+  [[:story/title "full title" :string :one :fulltext :index]
+  [:story/url "story's permamnent url" :string :one :unique-identity :index]
+  [:story/slug "a short title" :string :one]
+  [:comments "a collection of comments" :ref :many :component]
+  [:comment/body "comment 140 chars or less" :string :one]
+  [:comment/author "comment author" :ref :one]])
 ```
 
 Validate:
 
 ```clojure
-
-    (schema/has-attribute? :story/title)
+(schema/has-attribute? :story/title)
 ```
 
 Facts:
@@ -51,12 +49,12 @@ Facts:
 
 ```clojure
 
-    (fact/add
-     {:story/title "Datomic's 1.0 is released"
-      :story/url "http://datomic.com/downloads/1.0"
-      :story/slug "New, improved declarative api"
-      :comment/author 17592186045425
-      :comment/body "This is great!"})
+(fact/add
+  {:story/title "Datomic's 1.0 is released"
+  :story/url "http://datomic.com/downloads/1.0"
+  :story/slug "New, improved declarative api"
+  :comment/author 17592186045425
+  :comment/body "This is great!"})
 
 ```
 
@@ -65,14 +63,14 @@ Finders:
 
 ```clojure
 
-    (query/find-all-by :story/title)
+(query/find-all-by :story/title)
 
-    (query/find-changes 17592186045425)
-    >> {:author/name {:old nil, :new "Stu G"}, :author/email {:old nil, :new "stu@somemail.com"}}
+(query/find-changes 17592186045425)
+>> {:author/name {:old nil, :new "Stu G"}, :author/email {:old nil, :new "stu@somemail.com"}}
 
-    (query/find-all-by :story/title)
+(query/find-all-by :story/title)
 
-    ...
+...
 
 ```
 
@@ -80,21 +78,20 @@ Queries:
 
 
 ```clojure
-
-    (query/defquery '{:find [?title ?url]
-                      :in   [$ ?title]
-                      :where [[?a :story/title ?title]
-                              [?t :story/url ?url]]
-                      :values ["Clojure 2.0 announced", "http://clojure.org/downloads/2.0-beta"]})
-
+(query/defquery
+  '{:find [?title ?url]
+    :in   [$ ?title]
+    :where [[?a :story/title ?title]
+           [?t :story/url ?url]]
+    :values ["Clojure 2.0 announced", "http://clojure.org/downloads/2.0-beta"]})
 
 ```
 
-For more examples, see `test/datomic_tools/integration_test.clj`.
+For more examples, see [integration_test.clj](test/datomic_tools/integration_test.clj).
 
 ## Documentation
 
-See [docs/datomic.md](docs/datomic.md) (work-in-progress) for a developer guide.
+See [docs](docs/guide.md) for a work-in-progress, developer guide.
 
 ## Credits
 
