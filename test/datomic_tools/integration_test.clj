@@ -7,7 +7,8 @@
             [datomic-tools.fact :as fact]
             [datomic-tools.schema :as schema]
             [datomic-tools.query :as query]
-            [datomic-tools.utils :refer :all])
+            [datomic-tools.utils :refer :all]
+            [datomic-tools.validations :as v])
   (:import datomic.Util))
 
 
@@ -82,6 +83,12 @@
 (query/find-all-by :story/title)
 
 (query/find [:story/title] :story/url "http://datomic.com/downloads/1.0")
+
+(query/find [:author/email] :author/name "Stu G")
+
+(v/is-email?
+ (:author/email
+  (query/find [:author/email] :author/name "Stu G")))
 
 (query/defquery '{:find [?title ?url]
                   :in   [$ ?title]
