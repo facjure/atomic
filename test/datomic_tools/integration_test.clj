@@ -51,11 +51,12 @@
 (query/find-entity-id :author/name "Stu G")
 (query/find-entity-id :author/name "Rich H")
 
+(fact/retract 17592186045425
+  [:author/email "rich2@somemail.com"])
+
 (query/get-attributes 17592186045425)
 
 (query/find-changes 17592186045425)
-
-(query/history :author/name "Stu G")
 
 (query/find-all-by :author/name)
 
@@ -75,7 +76,12 @@
   :comment/author 17592186045429
   :comment/body "This is great!"})
 
+(fact/retract 17592186045429
+ {:story/title "Clojure 2.0 announced"})
+
 (query/find-all-by :story/title)
+
+(query/find [:story/title] :story/url "http://datomic.com/downloads/1.0")
 
 (query/defquery '{:find [?title ?url]
                   :in   [$ ?title]

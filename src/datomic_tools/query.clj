@@ -49,7 +49,6 @@
         ent (d/entity (snapshot) (ffirst eid))]
     (seq ent)))
 
-
 (defn find-entity
   "Returns the single entity returned by a query."
   [que & args]
@@ -67,7 +66,6 @@
   (->> (apply d/q query (snapshot) args)
        (mapv (fn [items]
                (mapv (partial d/entity (snapshot)) items)))))
-
 
 ;; API ;;
 
@@ -120,6 +118,13 @@
      (contains? options :first-only) (first (d/touch (d/entity (snapshot) res-id)))
      :else res-id)))
 
+;; PULL API
+
+(defn find [pattern attr valu]
+  (let [eid (find-entity-id attr valu)]
+    (d/pull (snapshot) pattern eid)))
+
+(def find)
 
 ;; HISTORY ;;
 

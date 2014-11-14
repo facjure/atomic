@@ -70,6 +70,9 @@ Finders:
 
 (query/find-all-by :story/title)
 
+;; includes the new 'pull api'
+(query/find [:story/title] :story/url "http://datomic.com/downloads/1.0")
+
 ...
 
 ```
