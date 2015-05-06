@@ -1,4 +1,4 @@
-(ns datomic-tools.utils
+(ns atomic.utils
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [datomic.api :as d]))

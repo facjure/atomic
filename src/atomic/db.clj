@@ -1,4 +1,4 @@
-(ns datomic-tools.db
+(ns atomic.db
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
             [clojure.java.io :as io]
@@ -6,7 +6,7 @@
             [clojure.edn :as edn]
             [datomic.api :as d]
             [clojure.tools.logging :as log]
-            [datomic-tools.utils :refer :all])
+            [atomic.utils :refer :all])
   (:import datomic.Util))
 
 
@@ -31,7 +31,7 @@
                                              "&aws_secret_key=" (:aws-secret-key env))
              (= dbtype :infinispan) (str "datomic:inf://{cluster-member-host}:{port}/" dbname)
              (= dbtype :cassandra) (str "datomic:cass://{cluster-member-host}[:{port}]/{keyspace}.{table}/"
-                                        dbname "[?user={user}&password={pwd}][&ssl=true]"))]
+1                                        dbname "[?user={user}&password={pwd}][&ssl=true]"))]
              uri))
 
 (defn create

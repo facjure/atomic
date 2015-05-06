@@ -1,4 +1,4 @@
-(ns datomic-tools.validations
+(ns atomic.validations
   (:require
    [clojure.set :refer :all]
    [clj-time.core :as t])

@@ -1,12 +1,12 @@
-(ns datomic-tools.query
+(ns atomic.query
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
             [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.edn :as edn]
             [datomic.api :as d]
-            [datomic-tools.db :refer [conn snapshot]]
-            [datomic-tools.utils :refer :all])
+            [atomic.db :refer [conn snapshot]]
+            [atomic.utils :refer :all])
   (:import datomic.Util))
 
 

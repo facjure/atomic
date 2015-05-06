@@ -1,7 +1,7 @@
-(defproject facjure/datomic-tools "0.1.2"
+(defproject facjure/atomic "0.2.0"
   :description "A thin wrapper on Datomic"
-  :min-lein-version "2.3.0"
-  :url "https://github.com/facjure/datomic-tools"
+  :min-lein-version "2.5.0"
+  :url "https://github.com/facjure/atomic"
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :warn-on-reflection false
   :dependencies [[org.clojure/clojure "1.7.0-beta2"]

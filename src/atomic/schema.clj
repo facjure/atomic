@@ -1,4 +1,4 @@
-(ns datomic-tools.schema
+(ns atomic.schema
   (:refer-clojure :exclude [name])
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
@@ -7,8 +7,8 @@
             [clojure.edn :as edn]
             [datomic.api :as d]
             [clojure.tools.logging :as log]
-            [datomic-tools.db :refer [conn snapshot]]
-            [datomic-tools.utils :refer :all])
+            [atomic.db :refer [conn snapshot]]
+            [atomic.utils :refer :all])
   (:import datomic.Util))
 
 

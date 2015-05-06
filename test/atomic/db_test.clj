@@ -1,6 +1,6 @@
-(ns datomic-tools.db-test
+(ns atomic.db-test
   (:require [clojure.test :refer :all]
-            [datomic-tools.db :refer :all]))
+            [atomic.db :refer :all]))
 
 (deftest test-db
   (testing "setup"
