@@ -1,4 +1,5 @@
 (ns atomic.integration-test
+  (:use expectations)
   (:require [clojure.pprint :as pp]
             [clojure.java.io :as io]
             [clojure.string :as str]
@@ -17,7 +18,7 @@
 (schema/has-attribute? :story/title)
 
 (schema/create-attribute
-   [:story/title "full title" :string :one :fulltext :index])
+ [:story/title "full title" :string :one :fulltext :index])
 
 (schema/has-attribute? :story/title)
 
@@ -40,12 +41,12 @@
 (schema/has-attribute? :comment/author)
 
 (fact/add
-  {:author/name "Stu G"
-   :author/email "stu@somemail.com"})
+ {:author/name "Stu G"
+  :author/email "stu@somemail.com"})
 
 (fact/add
-  {:author/name "Rich H"
-   :author/email "rich@somemail.com"})
+ {:author/name "Rich H"
+  :author/email "rich@somemail.com"})
 
 ;;(query/find-references)
 
@@ -53,7 +54,7 @@
 #_(query/find-entity-id :author/name "Rich H")
 
 (fact/retract 17592186045425
-  [:author/email "rich2@somemail.com"])
+              [:author/email "rich2@somemail.com"])
 
 (query/get-attributes 17592186045425)
 
@@ -79,7 +80,7 @@
 
 
 #_(fact/retract 17592186045429
-              {:story/title "Clojure 2.0 announced"})
+                {:story/title "Clojure 2.0 announced"})
 
 (query/find-all-by :story/title)
 
