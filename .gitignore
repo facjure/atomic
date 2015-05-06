@@ -7,3 +7,5 @@ pom.xml.asc
 /target/
 /checkouts/
 .lein*
+.repl*
+scripts
