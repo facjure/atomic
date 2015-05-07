@@ -12,8 +12,8 @@
                  [slingshot "0.12.2"]
                  [org.clojure/tools.logging "0.3.1"]]
   :plugins [[lein-environ "1.0.0"]
+            [lein-marginalia "0.8.0"]
             [lein-expectations "0.0.7"]
-            [lein-marginalia "0.8.0"]]
-  :profiles {:dev {:dependencies [[marginalia "0.8.0"]
-                                  [expectations "2.0.9"]
+            [lein-autoexpect "1.4.7"]]
+  :profiles {:dev {:dependencies [[expectations "2.0.9"]
                                   [lein-cljfmt "0.1.7"]]}})
