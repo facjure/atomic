@@ -9,13 +9,10 @@
             [atomic.utils :refer :all])
   (:import datomic.Util))
 
-(defonce #^{:doc "Connection to Datomic"}
-  conn (atom nil))
-
 ;;FIXME
 (defn- resolve-uri [dbname]
-  "Resolve uri for various storage engines.
-   TODO: Support map configs for sql and cassandra"
+  "Resolve uri based on various storage engines. Looks up :datomic-dbtype in Env.
+   Available engines :mem :free :dev :sql :ddb :ddb-local :infinispan"
   (let [dbtype (or (:datomic-dbtype env) :mem)
         uri (cond
               (= dbtype :mem) (str "datomic:mem://" dbname)
@@ -23,28 +20,24 @@
               (= dbtype :dev) (str "datomic:dev://localhost:4334//" dbname)
               (= dbtype :sql) (str "datomic:sql://" dbname "?"
                                    (:datomic-jdbc-url env))
-              (= dbtype :dynamodb) (str "datomic:ddb://" (:aws-region env) "/"
-                                        (:dynamodb-table env) "/" dbname
-                                        "?aws_access_key_id=" (:aws-access-key env)
-                                        "&aws_secret_key=" (::aws-secret-key env))
-              (= dbtype :dynamodb-local) (str "datomic:ddb-local://8000/" "/"
-                                              (:dynamodb-table env) "/" dbname
-                                              "?aws_access_key_id="
-                                              (:aws-access-key env)
-                                              "&aws_secret_key=" (:aws-secret-key env))
+              (= dbtype :ddb) (str "datomic:ddb://" (:aws-region env) "/"
+                                   (:dynamodb-table env) "/" dbname
+                                   "?aws_access_key_id=" (:aws-access-key env)
+                                   "&aws_secret_key=" (::aws-secret-key env))
+              (= dbtype :ddb-local) (str "datomic:ddb-local://8000/" "/"
+                                         (:dynamodb-table env) "/" dbname
+                                         "?aws_access_key_id="
+                                         (:aws-access-key env)
+                                         "&aws_secret_key=" (:aws-secret-key env))
               (= dbtype :infinispan) (str "datomic:inf://{cluster-member-host}:{port}/" dbname)
               (= dbtype :cassandra) (str "datomic:cass://{cluster-member-host}[:{port}]/{keyspace}.{table}/"
                                          dbname "[?user={user}&password={pwd}][&ssl=true]"))]
     uri))
 
-(defn create [uri]
+(defn create-and-connect [uri]
   "Create a database based on URI and return a Connection."
   (d/create-database uri)
-  (reset! conn (d/connect uri)))
-
-(defn connect [uri]
-  "Connect to a database based on URI."
-  (reset! conn (d/connect uri)))
+  (d/connect uri))
 
 (defn setup [dbname]
   "Create a database: dbname based on environment config and return a Connection.
@@ -53,15 +46,11 @@
   (let [uri (resolve-uri dbname)]
     (if (= (:datomic-dbtype env) :mem)
       (d/delete-database uri))
-    (create uri)))
+    (create-and-connect uri)))
 
 (defn create-anonymous []
   "Create a connection to an anonymous, in-memory db"
   (setup (d/squuid)))
-
-(defn snapshot []
-  "Current snapshot of the database"
-  (d/db @conn))
 
 (defn delete [dbname]
   "Deletes the database"
@@ -69,7 +58,12 @@
   (let [uri (resolve-uri dbname)]
     (d/delete-database uri)))
 
+(defn temp-eid
+  "Creats a temporary entity id, with an optional number for tracing"
+  ([] (temp-eid 0))
+  ([n] (d/tempid :db.part/user n)))
+
 (defmacro with-connection  [uri body]
   "Execute the body with the given conn uri"
-  `(binding [conn# (reset! conn (d/connect ~uri))]
+  `(binding [conn# (d/connect ~uri)]
      ~@body))

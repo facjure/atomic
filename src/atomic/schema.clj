@@ -7,37 +7,35 @@
             [clojure.edn :as edn]
             [datomic.api :as d]
             [clojure.tools.logging :as log]
-            [atomic.db :refer [conn snapshot]]
+            [atomic.db :as db]
             [atomic.utils :refer :all])
   (:import datomic.Util))
 
-
 (def allowed-types
   "Allowed values for Schema definitions. Maps to types in Dataomic
-   http://docs.datomic.com/schema.html#sec-1"
+  http://docs.datomic.com/schema.html#sec-1"
   (sorted-set :keyword :instant :uuid :boolean :bytes :string
               :bigint :long :float :double :bigdec :uri :ref))
 
-(defn- valid-type?
+(defn valid-type?
   "Check and throw an error if an invalid type is given for :db/valueType."
   [type]
   (if (contains? allowed-types type)
-      type
-      (throw (ex-info (str type " is not a valid attribute type.\n"
-                           " Allowed types: " allowed-types) {}))))
+    type
+    (throw (ex-info (str type " is not a valid attribute type.\n"
+                         " Allowed types: " allowed-types) {}))))
 
 (defn has-attribute?
   "Does database have an attribute named attr-name?"
-  [attr-name]
-  (-> (d/entity (snapshot) attr-name)
+  [conn attr-name]
+  (-> (d/entity (d/db) attr-name)
       :db.install/_attribute
       boolean))
 
-(defn create-attribute [schema]
+(defn create-attribute [conn schema]
   "Create a schema from an attribute definition vector:
-
-    Example:
-      create([:story/title 'full title' :string :one :fulltext :index])"
+   Example:
+       create-attribute([:story/title 'full title' :string :one :fulltext :index])"
   (let [stringify #(subs (str %) 1)
         attr (nth schema 0)
         sch (conj {} {:db/id (d/tempid :db.part/db)})
@@ -63,41 +61,42 @@
 
         sch (conj sch {:db.install/_attribute :db.part/db})]
     (when-not (has-attribute? attr)
-      (d/transact @conn (vector sch)))))
+      (d/transact conn (vector sch)))))
 
-(defn create [schema]
+(defn create [conn schema]
   "Create a schema from multiple attribute definition vectors"
-  (map create-attribute schema))
+  (map (create-attribute conn) schema))
 
-(defn load-edn [fname]
+(defn load-edn [conn fname]
   "Load Edn schema from resources"
   (doseq [txd (Util/readAll (io/reader (io/resource fname)))]
-    (d/transact @conn txd)))
+    (d/transact conn txd)))
 
-(defn find-attribute [attr]
+(defn find-attribute [conn attr]
   (d/q '[:find ?attr :in $ ?name
          :where [?attr :db/ident ?name]]
-       (snapshot) @conn
+       (d/db conn)
+       conn
        attr))
 
-(defn has-schema? [schema-attr schema-name]
-  "Does database have a schema-name installed? Uses schema-attr (an attr of transactions)
-   to track which schema names are installed."
+(defn has-schema? [conn schema-attr schema-name]
+  "Does database have a schema-name installed? Uses schema-attr
+   (an attr of transactions) to track which schema names are installed."
   (and (has-attribute? schema-attr)
        (-> (d/q '[:find ?e
                   :in $ ?sa ?sn
                   :where [?e ?sa ?sn]]
-                (d/db @conn) schema-attr schema-name)
+                (d/db conn) schema-attr schema-name)
            seq boolean)))
 
 (defn cardinality
   "Returns the cardinality :db.cardinality/one or :db.cardinality/many)"
-  [db attr]
+  [conn attr]
   (->>
-    (d/q '[:find ?v
-           :in $ ?attr
-           :where
-           [?attr :db/cardinality ?card]
-           [?card :db/ident ?v]]
-         db attr)
-    ffirst))
+   (d/q '[:find ?v
+          :in $ ?attr
+          :where
+          [?attr :db/cardinality ?card]
+          [?card :db/ident ?v]]
+        (d/db conn) attr)
+   ffirst))

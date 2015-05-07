@@ -1,9 +1,7 @@
 (ns atomic.validations
-  (:require
-   [clojure.set :refer :all]
-   [clj-time.core :as t])
+  (:require [clojure.set :refer :all]
+            [clj-time.core :as t])
   (:import [java.util UUID]))
-
 
 (defn has-value?
   "Returns true if v is truthy and not an empty string."
@@ -88,4 +86,3 @@
       :set (= type-found clojure.lang.PersistentHashSet)
       :map (= type-found clojure.lang.PersistentArrayMap)
       false)))
-
