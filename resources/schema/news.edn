@@ -1,5 +1,5 @@
-;; Credit: Day of Datomic
-;; https://github.com/Datomic/day-of-datomic/blob/master/resources/day-of-datomic/social-news.edn
+;; Social News Schema
+;; Credit: https://github.com/Datomic/day-of-datomic/blob/master/resources/day-of-datomic/social-news.edn
 
 ;; stories
 [{:db/id #db/id[:db.part/db]

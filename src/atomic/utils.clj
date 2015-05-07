@@ -3,7 +3,6 @@
             [clojure.string :as str]
             [datomic.api :as d]))
 
-
 (defmacro dbg [body]
   "Cheap inline debugging"
   `(let [x# ~body]
