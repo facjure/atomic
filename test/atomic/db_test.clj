@@ -1,15 +1,14 @@
 (ns atomic.db-test
   (:use expectations)
-  (:require [atomic.db :refer :all]))
+  (:require [atomic.db :as db]))
 
 (expect (more-> datomic.peer.LocalConnection type)
-        (create "datomic:mem://test"))
+  (db/create-and-connect "datomic:mem://test"))
 
 (expect (more-> datomic.peer.LocalConnection type)
-        (connect "datomic:mem://test"))
+  (db/setup "test"))
 
-(expect (more-> datomic.peer.LocalConnection type)
-        (setup "test"))
-
-(expect true (delete "test"))
-
+(expect (more-of res
+                 datomic.db.DbId (type res)
+                 [:part :db.part/user] (first res))
+  (db/temp-eid))

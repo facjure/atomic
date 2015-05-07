@@ -14,6 +14,6 @@
   :plugins [[lein-environ "1.0.0"]
             [lein-marginalia "0.8.0"]
             [lein-expectations "0.0.7"]
-            [lein-autoexpect "1.4.7"]]
+            [lein-autoexpect "1.4.2"]]
   :profiles {:dev {:dependencies [[expectations "2.0.9"]
                                   [lein-cljfmt "0.1.7"]]}})

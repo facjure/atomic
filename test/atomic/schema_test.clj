@@ -1,9 +1,11 @@
-;; Source: http://stackoverflow.com/questions/14724991/modelling-multiple-many-to-many-relationships-in-datomic
-
-(ns atomic.schema
+(ns atomic.schema-test
   (:use expectations)
   (:require [datomic.api :as d]
-            [atomic.db :as db]))
+            [atomic.db :as db]
+            [atomic.schema :as schema]
+            [atomic.fact :as fact]))
+
+(def conn (db/create-anonymous))
 
 (defn create-sample [uri]
   (let [uri (d/create-database uri)
@@ -115,3 +117,5 @@
        :comment/author (db/temp-eid -102)
        :comment/body "Me too!"
        :article/_comments (db/temp-eid -102)}])))
+
+(expect nil? (schema/load-edn conn "schema/blog.edn"))
