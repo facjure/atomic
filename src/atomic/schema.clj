@@ -25,10 +25,15 @@
     (throw (ex-info (str type " is not a valid attribute type.\n"
                          " Allowed types: " allowed-types) {}))))
 
+(defn load-edn [conn fname]
+  "Load Edn schema from resources"
+  (doseq [txd (Util/readAll (io/reader (io/resource fname)))]
+    (d/transact conn txd)))
+
 (defn has-attribute?
   "Does database have an attribute named attr-name?"
   [conn attr-name]
-  (-> (d/entity (d/db) attr-name)
+  (-> (d/entity (d/db conn) attr-name)
       :db.install/_attribute
       boolean))
 
@@ -60,20 +65,16 @@
               sch)
 
         sch (conj sch {:db.install/_attribute :db.part/db})]
-    (when-not (has-attribute? attr)
+    (when-not (has-attribute? conn attr)
       (d/transact conn (vector sch)))))
 
-(defn create [conn schema]
+(defn create-attributes [conn schema]
   "Create a schema from multiple attribute definition vectors"
   (map (create-attribute conn) schema))
 
-(defn load-edn [conn fname]
-  "Load Edn schema from resources"
-  (doseq [txd (Util/readAll (io/reader (io/resource fname)))]
-    (d/transact conn txd)))
-
 (defn find-attribute [conn attr]
-  (d/q '[:find ?attr :in $ ?name
+  (d/q '[:find ?attr
+         :in $ ?name
          :where [?attr :db/ident ?name]]
        (d/db conn)
        conn
@@ -82,14 +83,14 @@
 (defn has-schema? [conn schema-attr schema-name]
   "Does database have a schema-name installed? Uses schema-attr
    (an attr of transactions) to track which schema names are installed."
-  (and (has-attribute? schema-attr)
+  (and (has-attribute? conn schema-attr)
        (-> (d/q '[:find ?e
                   :in $ ?sa ?sn
                   :where [?e ?sa ?sn]]
                 (d/db conn) schema-attr schema-name)
            seq boolean)))
 
-(defn cardinality
+(defn find-cardinality
   "Returns the cardinality :db.cardinality/one or :db.cardinality/many)"
   [conn attr]
   (->>
