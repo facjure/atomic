@@ -50,3 +50,7 @@
 (expect
   false
   (schema/has-schema? conn :story/title :story/title))
+
+(expect
+  not-empty
+  (schema/properties conn))

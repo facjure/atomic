@@ -63,6 +63,18 @@
   ([] (temp-eid 0))
   ([n] (d/tempid :db.part/user n)))
 
+(defn incremental-id-gen
+  "Constructs a function to generate incremental ids
+   when called repeatedly
+   (repeatedly 5 (incremental-id-gen 100))
+   => [101 102 103 104 105]"
+  ([] (incremental-id-gen 0))
+  ([n]
+     (let [r (atom n)]
+       (fn []
+         (swap! r inc)
+         @r))))
+
 (defmacro with-connection  [uri body]
   "Execute the body with the given conn uri"
   `(binding [conn# (d/connect ~uri)]

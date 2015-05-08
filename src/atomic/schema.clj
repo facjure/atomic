@@ -101,3 +101,13 @@
           [?card :db/ident ?v]]
         (d/db conn) attr)
    ffirst))
+
+(defn properties [conn]
+  (let [data (d/q '[:find ?ident ?type ?cardinality ?e :where
+                    [?e :db/ident ?ident]
+                    [?e :db/valueType ?t]
+                    [?t :db/ident ?type]
+                    [?e :db/cardinality ?c]
+                    [?c :db/ident ?cardinality]]
+                  (d/db conn))]
+    (zipmap (map first data) data)))
