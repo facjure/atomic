@@ -7,18 +7,11 @@
 
 (def conn (db/create-anonymous))
 
-(expect nil?
-  (schema/load-edn conn "schema/blog.edn"))
+(schema/load-edn conn "schema/blog.edn")
 
 (expect
   true
   (schema/has-attribute? conn :user/username))
-
-(expect-let [conn (db/create-anonymous)]
-  (more-> Object type)
-  (schema/create-attribute
-   conn
-   [:story/title "full title" :string :one :fulltext :index]))
 
 (expect
   (more-> Object type)
@@ -46,7 +39,7 @@
   true
   (schema/has-attribute? conn :comment/author))
 
-(expect
+#_(expect
   true
   (schema/find-attribute conn :story/title))
 
