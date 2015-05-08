@@ -4,6 +4,7 @@ References
 ## Libraries
 
 - [Datomic Explain](https://github.com/dwhjames/datomic-q-explain)
+- [Datomic Schema](https://github.com/Yuppiechef/datomic-schema)
 
 ## Books
 

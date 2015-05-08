@@ -18,4 +18,5 @@ Changed into a rule:
      [?a :article/body ?p]
      [?a :article/title ?title]]
 
-Rule composition is powerful. Datalog rules can even implement graph traversal algorithms.
+Rule composition is powerful. Datalog rules can even implement graph traversal
+algorithms.

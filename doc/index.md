@@ -2,15 +2,13 @@
 
 **Table of Contents**
 
-- [Introduction](introduction.md)
 - [Installation](installation.md)
 - [Concepts](concepts.md)
+- [Facts](facts.md)
 - [Schemas](schemas.md)
-- [Transactions](transactions.md)
 - [Queries](queries.md)
 - [Rules](rules.md)
 - [Examples](examples.md)
-- [Tips & Tricks](tips.md)
 - [References](references.md)
 
 **License**

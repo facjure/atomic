@@ -1,180 +1,58 @@
-Concepts
-========
+Datomic Concepts
+================
 
-Datomic is designed to be directly programmable using data that represents the
-domain model, represented as Entities with Attributes and Values. The primary
-interface to Datomic is data, not strings, DDL or DML.
+Datomic considers a database to be an Information system.
 
-An Entity is referred by a generated id or keyword. Attributes are simply
-namespaced-keywords. A value can be scalar (String, Integer, etc.,), or a
-reference to another Entity. This reference establishes a relationship between
-two entities. Though analogous to the concept of a _foreign-key_, Datomic
-reference is just the value of the referenced attribute.
+Its architecture can be broken down into three categories:
 
-Entities in Datomic are definied recursively, like lists in lisp.
+- Create Facts: Identity, Entities, Attributes, Values, Transactions
+- Find Facts: Query, DbFunctions, and Rules
+- Manage Facts: Peers, Transactors, Storage Engines
 
-## Architecture
+This is of course a simplification. There are many fine-grained
+[concepts](http://docs.datomic.com/), but it's a start.
 
-### Peers
+Information is stored as a collection of events as **Facts**. Things that have
+happened. Each fact describes what happened at what _time_. Once stored in
+storage facts don't change.
 
-Peers handle queries and data storage.
+Naturally, Datomic supports only two operations: ADD and RETRACT via
+transactions.
 
-Applications with Datomic code runs in Peer(s). They take care of queries,
-caching, and hide the details of synchronizing updates from other peers.
+Old facts can be superseded by new facts over time and the state of the database
+is a _value_ defined by the set of facts at a given moment. As a result
+Datomic’s data model—based on immutable facts stored over time, enables a
+physical design different from most sql or nosql databases: instead of
+processing all requests in a single server, Datomic distributes read and write
+and query processing across different components, separating concerns
+commonly treated as the same in most databases.
 
-Peers query and access data locally using a database value and cache data
-extensively using LRU cache, representing a partial copy of all the facts. They
-construct a value for a database at a particular moment in time.
+*Queries** are handled by an extended form of Datalog, a declarative,
+ logic-based, and embeddable language in your application process. **Rules** are
+ analagous to normal functions. Instead of having forms, rules simply enclose
+ constraints (datalog). Abstracting reusable parts of queries into rules, enable
+ query composition.
 
-Peers are independent and don’t affect each other. They write new facts by
-asking the Transactor to add them to the Storage Service, get notified by the
-Transactor about new facts, and add them to their caches.
+*Peers* handle queries and data storage. They are independent of each other.
+Applications with Datomic code run in Peer(s). They handle queries, caching, and
+hide the details of synchronizing updates from other peers. Peers query and
+access data locally using a database value and cache data extensively using LRU
+cache, representing a partial copy of all the facts. This constructs a value for
+a database at a particular moment in time.
 
-Peers can partition the load into different peers by "type" of data/work. A
-production setup, typically, involves dynamically sharding data across peers.
-
-### Transactors
-
-A Transactor is a standalone process that handles transactions and indexing with
+*Transactors* are a standalone processes that handles transactions and indexing with
 _writes and retracts_. They are responsible for synchronizing data to Peers and
 implementing ACID transactions. Implemented in a "single thread of execution",
 with full serializabilty (isolation level: serialized), they write to a
 write-ahead log for durability. Like a coordinator: all writes must go.
 
-Typically, a transactor is deployed at the same location as peers, preferably
-close to the storage service. Transactors can be 1-2, run in serial sync, not in
-parallel. During hot failover the 2nd transactor takes over (in a few seconds
-for pro); however queries continue to work.
+Peers read Facts from **Storage Services**, distributed engines like Couchbase,
+Dynamodb, Riak, and others. Peers write new facts by asking the Transactor to
+add them to the Storage Service, get notified by the Transactor about new facts,
+and add them to their caches.
 
-Transactor owns the root index, and the indexes are global.
-
-A Transactor alsp handles indexing. Indexes are generated so peers can use it.
-
-Additional notes:
-
-- Careful with error vs timeout
-- Can you pass around the 't' (in a cookie)? (Find out)
-- Opaque binary blobs
-- memcache--no invalidation
-
-## Facts
-
-The data model in Datomic is based around atomic facts called datoms: a single,
-flat, universal relation.
-
-There is no other structural component to Datomic.
-
-A datom is a 4-tuple consisting of:
-
-    [entity attribute value transaction]
-
-Any model in real or manufactured world can be represented in this 4-tuple.
-
-For ex, a Person can be created as:
-
-    [100 :person/firstName "Rich" 1000]
-
-Note that entity and transaction here are arbitrary numbers (can be generated by Datomic).
-
-A blog can be modeled as two facts:
-
-    [200 :blog/title "on datomic" 1000]
-    [200 :blog/entry "datomic will change the way you think of databases" 1000]
-
-A registration page can save a web form as a set of facts:
-
-     [100 :user.registration/name "clojure-addict" 1000]
-     [200 :user.registration/email "hello@example.com" 1000]
-     [300 :user.registration/address "1 mission street san francisco ca 94103" 1000]
-
-And so on.
-
-## Entities, Attributes & Values
-
-A Datomic entity is simply a _Fact_ providing a lazy, associative view of all
-the information that can be reached from its id.
-
-Let' revisit our 4-tuple Fact:
-
-    [entity attribute value transaction]
-
-- entity: entity id (typically, an auto-generated id)
-- attribute: Clojure keyword representing both the model (namespace :person) 
-  and attribute name (firstName)
-- value: any value
-- transaction: tx id generated by datomic; used internally for time-based 
-  queries
-
-Note that entities are not a mapping layer between databases and application
-code: they're a direct translation from information stored in the database to
-application as raw data structures.
-
-Entity references are bi-directional by default:
-
-    [{:db/id #db/id[:db.part/user -1]
-      :person/name "Bob"
-      :person/spouse #db/id[:db.part/user -2]}
-     {:db/id #db/id[:db.part/user -2]
-      :person/name "Alice"
-      :person/spouse #db/id[:db.part/user -1]}]
-
-Entity attributes are accessed lazily as you request them. 
-
-They aren't typed.
-
-_Let's revisit_: Fact (datom) is entity-attribute-value-transaction. Therefore,
-attribute/value pair and the transaction are associated with the entity, which
-is a number. The transaction holds the time. We create a new entity when we
-transact an attribute without specifying entity. We change the attribute (add,
-"update") when we transact with the entity.
-
-## Indentity
-
-Datomic auto-generates entity ids and stores them as part of every datom. To
-simplify application access, `:db/ident` provides a keyword-based lookup to
-entities that can be used by apis querying through entity 'id'.
-
-For ex the following record can be accessed via `:person/name` lookup, instead
-of the generated id.
-
-    {:db/id #db/id[:db.part/db]
-     :db/ident :person/name}
-
-Identities can also be used to implement enumerated tags.
-
-    {:db/id #db/id[:db.part/db]
-     :db/ident :label/type
-     :db/doc "Enum, one of :label.type/distributor, :label.type/holding,
-        :label.type/production, :label.type/originalProduction,
-        :label.type/bootlegProduction, :label.type/reissueProduction, or
-        :label.type/publisher."}
-
-`Unique identities` allow attributes to have unique values.
-
-    {:db/id #db/id[:db.part/db]
-     :db/ident :person/email
-     :db/unique :db.unique/identity}
-
-A unique identity attribute is always indexed by value.
-
-`Lookup Refs' are _Business Keys_ on steroids: a list containing an attribute
-and value.
-
-    [:person/email "joe@example.com"]
-
-To refer to existing entities in a transaction, avoiding extra lookup code, use:
-
-    {:db/id [:person/email "rich@example.com"]
-     :person/name :rich}
-
-Note that Lookup refs _cannot_ be used in queries.
-
-`Squuids` provide efficient, globally unique identifiers. They are _not_ real
-UUIDs, but they come close as semi-sequential uuids. As long you don't generate
-thousands of squuids every millisecond, indexes based on squuids will not
-fragment: the first part of a squuid is based on the system time.
-
-`ident` is designed to be fast. 
-
-In general, queries against a single database can lookup entity ids via other
-kinds of identifiers, but for efficiency should join by entity id.
+However, Datomic is a [CP](http://en.wikipedia.org/wiki/CAP_theorem) system,
+trades-off unlimited write scalability, in-built constraints, in favor of a
+flexibile data and query modeling abstraction (Datalog), with a fine
+interesction of sound database and functional programming principles like ACID
+transactions and Imutability.

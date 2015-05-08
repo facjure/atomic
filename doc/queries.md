@@ -127,3 +127,4 @@ Each is a pure function.
 ## Caching
 
 Datomic caches only immutable data, so all caches are valid forever.
+
