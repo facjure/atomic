@@ -2,14 +2,13 @@ Atomic
 =======
 
 Atomic is a thin wrapper on Datomic, optimized with a declarative api for
-working with Peers, Queries, Rules, Schemas, and Validations. Includes
-helper functions for common tasks.
+working with Facts, Schemas, and Rules.
 
-## Usage
+## Quickstart
 
-Leiningen dependency:
+Add the following to Leiningen or Boot dependency:
 
-    [facjure/atomic "0.2.0"]
+	[facjure/atomic "0.2.0"]
 
 [Environ](https://github.com/weavejester/environ) is used to manage environment
 variables for AWS, Heroku, Cassandra and other storage engines.
@@ -20,13 +19,10 @@ Add the follwing keys in `~/.lein/profiles.clj`:
     :datomic-dbname ("test")
     :datomic-jdbc-url (postgres/heroku url)
 
-## Quickstart
-
 For in-memory datomic, setup:
 
 ```clojure
-
-    (db/create-anonymous)
+(db/create-anonymous)
 ```
 
 Create a schema:
@@ -49,7 +45,6 @@ Validate:
 
 Create Facts:
 
-
 ```clojure
 (fact/add
   {:story/title "Datomic's 1.0 is released"
@@ -59,7 +54,7 @@ Create Facts:
   :comment/body "This is great!"})
 ```
 
-Finders:
+Find Facts:
 
 ```clojure
 (query/find-all-by :story/title)
@@ -70,7 +65,6 @@ Finders:
 (query/find-all-by :story/title)
 
 (query/find [:story/title] :story/url "http://datomic.com/downloads/1.0")
-
 ```
 
 Queries:
@@ -88,23 +82,21 @@ For more examples, see [integration_test.clj](test/atomic/integration_test.clj).
 
 ## Documentation
 
-See [docs](doc/index.md) for a developer guide.
+See [doc](doc/index.md) for a developer guide.
 
 ## Credits
 
-A big thanks to Craig Andera's excellent tutorials,
-[Day of Datomic](https://github.com/Datomic/day-of-datomic). I learned a lot
-from studying the source code of the following libraries (and copied some
-functions): [mBrainz-sample](https://github.com/Datomic/mbrainz-sample),
-[Datomico](https://github.com/cldwalker/datomico),
-[Demonic](https://github.com/zololabs/demonic),
-[Lib-noir](https://github.com/noir-clojure/lib-noir), and [Adi](https://github.com/zcaudate/adi)
+I learned a lot from studying the source code of the following libraries and
+demos, and copied some functions:
+[Day of Datomic](https://github.com/Datomic/day-of-datomic),
+[mBrainz-sample](https://github.com/Datomic/mbrainz-sample),[Lib-noir](https://github.com/noir-clojure/lib-noir),
+and [Adi](https://github.com/zcaudate/adi).
 
 ## Status & Roadmap
 
-0.2.0.
+This library is still in development. Feedback and contributions are welcome.
 
-Feedback and contributions are welcome.
+v0.2.0
 
 ## License
 

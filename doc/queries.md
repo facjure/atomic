@@ -1,6 +1,10 @@
 Queries
 =======
 
+Data access pattern
+
+	[<database> <entity-id> <attribute> <value> <transaction-id>]
+
 ## Overview
 
 Query is data. 
@@ -11,10 +15,13 @@ syntax looks like this: find, in, and where 'data patterns':
 
 Example: find all movie titles in the year 1987.
 
-    [:find ?title
-     :where 
-        [?e :movie/year 1987]
-        [?e :movie/title ?title]]
+```clojure
+[:find
+   ?title
+ :where 
+   [?e :movie/year 1987]
+   [?e :movie/title ?title]]
+```   
 
 Variables are symbols: strings, numbers keywords, literals, and `#tags`
 
