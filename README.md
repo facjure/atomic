@@ -10,19 +10,24 @@ Add the following to Leiningen or Boot dependency:
 
 	[facjure/atomic "0.2.0"]
 
+Assuming you've acquired a license for
+[Datomic Starter Pro](https://my.datomic.com/downloads/pro), install datomic-pro
+in your local maven:
+
+	bin/maven-install
+
 [Environ](https://github.com/weavejester/environ) is used to manage environment
 variables for AWS, Heroku, Cassandra and other storage engines.
 
 Add the follwing keys in `~/.lein/profiles.clj`:
 
-    :datomic-dbtype (:free)
-    :datomic-dbname ("test")
-    :datomic-jdbc-url (postgres/heroku url)
+    :aws-access-key-id "" 
+    :aws-secret-key ""
 
 For in-memory datomic, setup:
 
 ```clojure
-(db/create-anonymous)
+(db/connect-anonymously!)
 ```
 
 Create a schema:
@@ -78,7 +83,7 @@ Queries:
     :values ["Clojure 2.0 announced", "http://clojure.org/downloads/2.0-beta"]})
 ```
 
-For more examples, see [integration_test.clj](test/atomic/integration_test.clj).
+More coming soon.
 
 ## Documentation
 
@@ -88,8 +93,8 @@ See [doc](doc/index.md) for a developer guide.
 
 I learned a lot from studying the source code of the following libraries and
 demos, and copied some functions:
-[Day of Datomic](https://github.com/Datomic/day-of-datomic),
-[mBrainz-sample](https://github.com/Datomic/mbrainz-sample),[Lib-noir](https://github.com/noir-clojure/lib-noir),
+[Day of Datomic](https://github.com/Datomic/day-of-datomic), 
+[mBrainz-sample](https://github.com/Datomic/mbrainz-sample), [Lib-noir](https://github.com/noir-clojure/lib-noir),
 and [Adi](https://github.com/zcaudate/adi).
 
 ## Status & Roadmap
