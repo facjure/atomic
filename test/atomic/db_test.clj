@@ -3,10 +3,13 @@
   (:require [atomic.db :as db]))
 
 (expect (more-> datomic.peer.LocalConnection type)
-  (db/create-and-connect "datomic:mem://test"))
+  (db/resolve-uri :mem "test"))
 
 (expect (more-> datomic.peer.LocalConnection type)
-  (db/setup "test"))
+  (db/create! "test"))
+
+(expect (more-> datomic.peer.LocalConnection type)
+  (db/create-anonymous! "test"))
 
 (expect (more-of res
                  datomic.db.DbId (type res)
