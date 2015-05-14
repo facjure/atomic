@@ -5,7 +5,7 @@
             [atomic.schema :as schema]
             [atomic.fact :as fact]))
 
-(def conn (db/create-anonymous))
+(def conn (db/create-anonymous!))
 
 (defn create-sample [uri]
   (let [uri (d/create-database uri)

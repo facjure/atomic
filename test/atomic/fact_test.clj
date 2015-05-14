@@ -5,7 +5,7 @@
             [atomic.schema :as schema]
             [atomic.fact :as fact]))
 
-(def conn (db/create-anonymous))
+(def conn (db/create-anonymous!))
 (schema/load-edn conn "schema/blog.edn")
 
 ;; TODO validate results
