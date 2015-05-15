@@ -8,4 +8,6 @@ pom.xml.asc
 /checkouts/
 .lein*
 .repl*
+.nrepl*
 scripts
+*cider*
