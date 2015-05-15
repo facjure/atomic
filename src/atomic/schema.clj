@@ -70,7 +70,7 @@
 
 (defn create-attributes [conn schema]
   "Create a schema from multiple attribute definition vectors"
-  (map (create-attribute conn) schema))
+  (map #(create-attribute conn %) schema))
 
 (defn find-attribute [conn attr]
   (d/q '[:find ?attr

@@ -9,24 +9,23 @@
             [atomic.utils :refer :all])
   (:import datomic.Util))
 
-
 (def included-refs
   #{[:db/lang] [:db/valueType] [:db.excise/attrs] [:db/unique] [:db.alter/attribute]
     [:db.install/function] [:db/excise] [:db/cardinality]})
 
 (defmacro defquery
-  "A simple query api. Takes care of getting the current snapshot of the db, conn etc.,
+  "A simple query api. Takes care of getting the current snapshot of db, conn etc.,
   TODO: a lot more todo!
   Ex:
   (query '{:find   [?title]
-  :in     [$ ?artist-name]
-  :where  [[?a :artist/name ?artist-name]
-  [?t :track/artists ?a]
-  [?t :track/name ?title]]
-  :values ['Joe Satriani']})"
+           :in     [$ ?artist-name]
+           :where  [[?a :artist/name ?artist-name]
+                   [?t :track/artists ?a]
+                    [?t :track/name ?title]]
+           :values ['Joe Satriani']})"
   [conn q]
   `(let [v# (:values ~q)]
-     (d/q ~q (d/db conn) (first v#))))
+     (d/q ~q (d/db ~conn) (first v#))))
 
 (defn get-attributes
   "Pull all the attributes of an entity into a map"
@@ -57,7 +56,7 @@
                (ffirst res))]
     (d/entity snapshot (only res))))
 
-(defn- find-entities
+(defn find-entities
   "Returns the entities returned by a query, assuming that
   all :find results are entity ids."
   [conn query & args]
@@ -86,7 +85,8 @@
 
 (defn find-references [conn]
   (let [res (d/q '[:find ?ident
-                   :where
+                   :wher
+                   e
                    [?e :db/ident ?ident]
                    [_ :db.install/attribute ?e]
                    [?e :db/valueType :db.type/ref]]
@@ -119,5 +119,5 @@
 
 (defn find-pattern [conn pattern attr valu]
   (let [snapshot (d/db conn)
-        eid (find-entity-id attr valu)]
+        eid (find-entity-id conn attr valu)]
     (d/pull snapshot pattern eid)))
