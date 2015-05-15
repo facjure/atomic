@@ -24,7 +24,7 @@
 (defn retract [conn id attr-data]
   "Retract a fact from attribute data"
   (let [op :db/retract
-        tx-data (conj op id attr-data)]
+        tx-data (concat (conj [] op id) attr-data)]
     (d/transact conn (vector tx-data))))
 
 (defn- install
