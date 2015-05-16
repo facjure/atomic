@@ -1,4 +1,4 @@
-(defproject facjure/atomic "0.2.0"
+(defproject facjure/atomic "0.2.1"
   :description "A thin wrapper on Datomic"
   :url "https://github.com/facjure/atomic"
   :license {:name "Eclipse Public License"

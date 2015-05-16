@@ -101,7 +101,7 @@ and [Adi](https://github.com/zcaudate/adi).
 
 This library is still in development. Feedback and contributions are welcome.
 
-v0.2.0
+[![Clojars Project](http://clojars.org/facjure/atomic/latest-version.svg)](http://clojars.org/facjure/atomic)
 
 ## License
 
