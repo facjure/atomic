@@ -8,10 +8,13 @@
   :min-lein-version "2.5.0"
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :warn-on-reflection false
-  :dependencies [[org.clojure/clojure "1.7.0-beta2"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
                  [environ "1.0.0"]
-                 [com.datomic/datomic-free "0.9.5153" :exclusions [joda-time]]
-                 ;;[com.datomic/datomic-pro "0.9.5153" :exclusions [joda-time]]
+                 [com.datomic/datomic-free "0.9.5201" :scope  "provided"
+                  :exclusions [joda-time
+                               org.slf4j/slf4j-nop
+                               org.slf4j/slf4j-log4j12]]
+                 [ch.qos.logback/logback-classic "1.0.1"]
                  [clj-time "0.9.0"]
                  [slingshot "0.12.2"]
                  [org.clojure/tools.logging "0.3.1"]]
@@ -19,5 +22,4 @@
             [lein-marginalia "0.8.0"]
             [lein-expectations "0.0.7"]
             [lein-autoexpect "1.4.2"]]
-  :profiles {:dev {:dependencies [[expectations "2.0.9"]
-                                  [lein-cljfmt "0.1.7"]]}})
+  :profiles {:dev {:dependencies [[expectations "2.0.9"]]}})
