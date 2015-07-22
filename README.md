@@ -103,6 +103,8 @@ This library is still in development. Feedback and contributions are welcome.
 
 [![Clojars Project](http://clojars.org/facjure/atomic/latest-version.svg)](http://clojars.org/facjure/atomic)
 
+[![Circle CI](https://circleci.com/gh/facjure/atomic.svg?style=svg)](https://circleci.com/gh/facjure/atomic)
+
 ## License
 
 © Facjure LLC, 2015.
