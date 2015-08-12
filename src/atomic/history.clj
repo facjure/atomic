@@ -70,3 +70,8 @@
                                     (d/entity (d/as-of snapshot (ffirst changes)))
                                     :db/txInstant)})))]
      query))
+
+(defn find-tx-instants [conn]
+  (reverse (sort (d/q '[:find ?when
+                        :where [_ :db/txInstant ?when]]
+                      (d/db conn)))))
