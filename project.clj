@@ -10,12 +10,9 @@
   :warn-on-reflection false
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/tools.logging "0.3.1"]
-                 [environ "1.0.0"]
-                 [com.datomic/datomic-free "0.9.5206" :scope  "provided"
-                  :exclusions [joda-time
-                               org.slf4j/slf4j-nop
-                               org.slf4j/slf4j-log4j12]]
-                 [ch.qos.logback/logback-classic "1.0.1"]
+                 [environ "1.0.1"]
+                 [com.datomic/datomic-free "0.9.5206" :exclusions [joda-time]]
+                 [com.stuartsierra/component "0.2.3"]
                  [clj-time "0.9.0"]
                  [slingshot "0.12.2"]]
   :plugins [[lein-environ "1.0.0"]
