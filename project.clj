@@ -22,5 +22,5 @@
             [lein-marginalia "0.8.0"]
             [lein-expectations "0.0.7"]
             [lein-autoexpect "1.4.2"]]
-  :profiles {:dev {:dependencies [[org.clojure/tools.nrepl "0.2.10"]
-                                  [expectations "2.0.9"]]}})
+  :profiles {:dev {:source-paths ["src" "examples"]
+                   :dependencies [[expectations "2.0.9"]]}})
