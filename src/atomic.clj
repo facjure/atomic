@@ -4,6 +4,23 @@
             [clojure.java.io :as io])
   (:import datomic.Util))
 
+
+(defprotocol Lifecycle
+  (init [])
+  (clone [])
+  (stage [])
+  (commit [])
+  (push [])
+  (pull [])
+  (branch [])
+  (merge [])
+  (log [])
+  (find [])
+  (compare [])
+  (sync [])
+  (send-pull-request [])
+  (status []))
+
 (defrecord Atomic [uri schema initial-data connection]
   component/Lifecycle
   (start [component]
@@ -20,3 +37,5 @@
     (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))
     (first (Util/readAll (io/reader (io/resource "data/initial.edn"))))
     nil))
+
+
