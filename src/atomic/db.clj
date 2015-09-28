@@ -46,12 +46,12 @@
                                            "[&ssl=true]"))]
     uri))
 
-(defn create! [dbtype dbname options]
+(defn create! [dbtype dbname & options]
   "Create a database and return a Connection by resolving the URI from
    dbtype. For in-memory dbs, create a fresh db each time. Calling create!
    multiple times is safe but unnecessary: Datomic caches the instance of
    Connection for a given URI."
-  (let [uri (resolve-uri dbtype dbname options)]
+  (let [uri (resolve-uri (apply dbtype dbname) options)]
     (if (= dbtype :mem)
       (d/delete-database uri))
     (d/create-database uri)
@@ -82,3 +82,4 @@
   "Execute the body with the given conn uri"
   `(binding [conn# (d/connect ~uri)]
      ~@body))
+
