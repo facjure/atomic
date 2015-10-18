@@ -4,22 +4,20 @@
             [clojure.java.io :as io])
   (:import datomic.Util))
 
-
 (defprotocol Lifecycle
-  (init [])
-  (clone [])
-  (stage [])
-  (commit [])
-  (push [])
-  (pull [])
-  (branch [])
-  (merge [])
-  (log [])
-  (find [])
-  (compare [])
-  (sync [])
-  (send-pull-request [])
-  (status []))
+  (init [self])
+  (clone [self])
+  (stage [self])
+  (commit [self])
+  (push [self])
+  (pull [self])
+  (branch [self])
+  (merge [self])
+  (log [self])
+  (find [self])
+  (compare [self])
+  (sync [self])
+  (status [self]))
 
 (defrecord Atomic [uri schema initial-data connection]
   component/Lifecycle
