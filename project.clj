@@ -6,7 +6,7 @@
   :min-lein-version "2.5.0"
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :warn-on-reflection false
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.8.0-beta1"]
                  [org.clojure/core.typed "0.3.11"]
                  [org.clojure/tools.logging "0.3.1"]
                  [com.datomic/datomic-free "0.9.5327" :exclusions [joda-time]]
