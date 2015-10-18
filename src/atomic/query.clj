@@ -121,3 +121,25 @@
   (let [snapshot (d/db conn)
         eid (find-entity-id conn attr valu)]
     (d/pull snapshot pattern eid)))
+
+(defn -q [q & args]
+  (let [key (str q)
+        start (.getTime (java.util.Date.))
+        res (apply d/q q args)
+        end (.getTime (java.util.Date.))]
+    (println "Q time: " (- end start))
+    res))
+
+(defn query
+  "If queried entity id, return single entity of first result"
+  [q db & sources]
+  (->> (apply -q q db sources)
+       ffirst
+       (d/entity db)))
+
+(defn query-by
+  "Return single entity by attribute existence or specific value"
+  ([db attr]
+    (query '[:find ?e :in $ ?a :where [?e ?a]] db attr))
+  ([db attr value]
+    (query '[:find ?e :in $ ?a ?v :where [?e ?a ?v]] db attr value)))

@@ -16,19 +16,19 @@
   [db]
   (:migration/version (find-entity db) -1))
 
-(defn update-version
-  "Update the migration version or throw an exception if the version does not increase
-   the previous version by 1."
-  [conn version]
-  (let [e (add-entity (db conn))]
-    @(d/transact conn [[:db.fn/cas (:db/id e) :migration/version (dec version) version]])))
-
 (defn add-entity
   "Adds the entity to keep track of the migration version."
   [conn]
   (assert (= -1 (get-version (db conn))))
   ;; This will set it to -1, then update-migration-version will set it to 0
   @(d/transact conn [{:db/id (d/tempid :db.part/user) :migration/version -1}]))
+
+(defn update-version
+  "Update the migration version or throw an exception if the version does not increase
+   the previous version by 1."
+  [conn version]
+  (let [e (add-entity (db conn))]
+    @(d/transact conn [[:db.fn/cas (:db/id e) :migration/version (dec version) version]])))
 
 (defn migrate
   "Migrate an array-map of migrations. The migration version is the key in the map"
