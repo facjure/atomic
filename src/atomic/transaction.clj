@@ -61,3 +61,31 @@
 (defn ref-attr? [db attr-name]
   (let [attr-value-type (:db/valueType (query/query-by db :db/ident attr-name))]
     (= :db.type/ref attr-value-type)))
+
+(defn find-tx-instants [conn]
+  (reverse (sort (d/q '[:find ?when
+                        :where [_ :db/txInstant ?when]]
+                      (d/db conn)))))
+
+(defn transactions
+  ([conn attr]
+   (->> (d/q '[:find ?tx
+               :in $ ?a
+               :where [_ ?a ?v ?tx _]
+               [?tx :db/txInstant ?tx-time]]
+             (d/history (d/db conn))
+             attr)
+        (map #(first %))
+        (map d/tx->t)
+        (sort)))
+  ([conn attr val]
+   (->> (d/q '[:find ?tx
+               :in $ ?a ?v
+               :where [_ ?a ?v ?tx _]
+               [?tx :db/txInstant ?tx-time]]
+             (d/history (d/db conn))
+             attr val)
+        (map #(first %))
+        (map d/tx->t)
+        (sort))))
+
