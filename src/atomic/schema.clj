@@ -7,7 +7,7 @@
             [clojure.edn :as edn]
             [datomic.api :as d]
             [clojure.tools.logging :as log]
-            [atomic.db :as db]
+            [atomic.database :as db]
             [atomic.utils :refer :all])
   (:import datomic.Util))
 

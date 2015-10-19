@@ -5,7 +5,7 @@
             [clojure.string :as str]
             [clojure.edn :as edn]
             [datomic.api :as d]
-            [atomic.db :as db]
+            [atomic.database :as db]
             [atomic.utils :refer :all])
   (:import datomic.Util))
 

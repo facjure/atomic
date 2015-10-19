@@ -1,7 +1,7 @@
 (ns atomic.history
   (:require [clojure.edn :as edn]
             [datomic.api :as d]
-            [atomic.db :refer [temp-eid]]
+            [atomic.database :refer [temp-eid]]
             [atomic.utils :refer :all])
   (:import datomic.Util))
 

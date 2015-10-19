@@ -4,7 +4,7 @@
             [clojure.string :as str]
             [clojure.edn :as edn]
             [datomic.api :as d]
-            [atomic.db :as db]
+            [atomic.database :as db]
             [atomic.fact :as fact]
             [atomic.schema :as schema]
             [atomic.query :as query]
@@ -12,7 +12,7 @@
   (:import datomic.Util))
 
 (comment
-  
+
  (db/create! "datomic:free://localhost:4334/mbrainz-1968-1973")
 
  (schema/has-attribute? :release/country)

@@ -1,4 +1,4 @@
-(ns atomic.db
+(ns atomic.database
   (:require [environ.core :refer [env]]
             [clojure.pprint :as pp]
             [clojure.java.io :as io]
