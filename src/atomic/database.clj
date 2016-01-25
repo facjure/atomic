@@ -9,7 +9,7 @@
             [atomic.utils :refer :all])
   (:import datomic.Util))
 
-(defn resolve-uri [dbtype dbname options]
+(defn- resolve-uri [dbtype dbname options]
   "Resolve uri based on various storage engines. Looks up :aws-access-key
     :aws-access-secret :cassandra-user :cassandra-password from ENV.
 
@@ -59,7 +59,9 @@
 
 (defn create-anonymous! []
   "Create a connection to an anonymous, in-memory db"
-  (create! :mem (d/squuid) nil))
+  (let [db-name (str "datomic:mem://" (d/squuid))]
+    (d/create-database db-name)
+    (d/connect db-name)))
 
 (defn temp-eid
   "Creats a temporary entity id, with an optional number for tracing"
