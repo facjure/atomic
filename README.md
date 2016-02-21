@@ -1,14 +1,10 @@
 Atomic
 =======
 
-Atomic is a wrapper on Datomic, designed with a declarative api for
-working with Facts, Schemas, and Rules.
+A tiny library on Datomic, with a declarative api for working with Facts,
+Schemas, and Rules.
 
 ## Getting Started
-
-Add the following to Leiningen or Boot dependency:
-
-	[facjure/atomic "0.2.0"]
 
 For in-memory datomic, setup:
 
@@ -66,17 +62,7 @@ Queries:
     :values ["Clojure 2.0 announced", "http://clojure.org/downloads/2.0-beta"]})
 ```
 
-More coming soon.
-
-## Credits
-
-I borrowed ideas and functions from the following examples and libraries:
-[Day of Datomic](https://github.com/Datomic/day-of-datomic),
-[mBrainz-sample](https://github.com/Datomic/mbrainz-sample),
-[Lib-noir](https://github.com/noir-clojure/lib-noir),
-[Adi](https://github.com/zcaudate/adi), [Dato](https://github.com/sgrove/dato).
-
-## Status & Roadmap
+## Status
 
 Atomic is currently in the design phase.
 
@@ -86,6 +72,6 @@ Atomic is currently in the design phase.
 
 ## License
 
-© 2015 Facjure, LLC.
+© 2015-2016 Facjure, LLC.
 
 Distributed under the Eclipse Public License, the same as Clojure.
